@@ -798,5 +798,7 @@ Licence text: [creativecommons.org/licenses/by-sa/4.0](https://creativecommons.o
 
 ---
 © 2026 James I.T. Wylie.
+
 Licensed under CC BY-SA 4.0.
+
 TRUST™ and RESPECT™ are trademarks of Synavera Discorporated. Use of these marks does not imply endorsement unless explicitly stated and may be challenged when used to describe systems that materially violate the model definitions.
