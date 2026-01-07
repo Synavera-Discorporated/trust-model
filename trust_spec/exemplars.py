@@ -16,8 +16,9 @@
    json, os, pathlib, datetime, trust_spec.violations.
  Operational Scope:
    Used by selected tests to freeze failing sequences as reviewable artifacts.
- Revision History:
+Revision History:
    2026-01-06 COD  Created exemplar capture and rendering helpers.
+   2026-01-06 COD  Switched exemplar index updates to append-only with rebuild flag.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)
@@ -39,12 +40,14 @@ from trust_spec.violations import Report
 
 
 EXEMPLAR_ENV_VAR = "TRUST_EXEMPLARS"
+_INDEX_REBUILD_ENV = "TRUST_EXEMPLARS_REBUILD_INDEX"
 
 _BASE_DIR = Path(__file__).resolve().parent / "exemplars"
 _CAPTURE_DIR = _BASE_DIR / "_captures"
 _RENDER_DIR = _BASE_DIR / "_rendered"
 _README_PATH = _BASE_DIR / "README.md"
 
+# Volatile fields are stripped so exemplars remain stable across runs.
 _VOLATILE_EVENT_FIELDS = {"event_hash", "event_hash_prev", "time_utc"}
 _VOLATILE_RECEIPT_FIELDS = {"receipt_hash", "receipt_hash_prev", "receipt_id", "time_utc"}
 
@@ -64,7 +67,28 @@ def exemplars_enabled() -> bool:
     Raises:
         None.
     """
+    # Capture is explicit and opt-in to avoid polluting normal test runs.
     value = os.environ.get(EXEMPLAR_ENV_VAR, "")
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _index_rebuild_enabled() -> bool:
+    """Return whether the exemplar index should be rebuilt.
+
+    Args:
+        None.
+
+    Returns:
+        True when TRUST_EXEMPLARS_REBUILD_INDEX is set to a truthy value.
+
+    Resources:
+        Environment variable TRUST_EXEMPLARS_REBUILD_INDEX.
+
+    Raises:
+        None.
+    """
+    # Rebuild is explicit so index updates remain append-only by default.
+    value = os.environ.get(_INDEX_REBUILD_ENV, "")
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
@@ -135,6 +159,7 @@ def _normalize_events(events: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     normalized: List[Dict[str, Any]] = []
     for event in events:
+        # Preserve order while stripping volatile hash/time fields.
         cleaned = {key: value for key, value in event.items() if key not in _VOLATILE_EVENT_FIELDS}
         normalized.append(cleaned)
     return normalized
@@ -157,6 +182,7 @@ def _normalize_receipts(receipts: Iterable[Dict[str, Any]]) -> List[Dict[str, An
     """
     normalized: List[Dict[str, Any]] = []
     for receipt in receipts:
+        # Receipts are normalized to keep replay stable across time/hash differences.
         cleaned = {
             key: value for key, value in receipt.items() if key not in _VOLATILE_RECEIPT_FIELDS
         }
@@ -197,6 +223,7 @@ def _bundle_violations(report: Report) -> Dict[str, Any]:
     Raises:
         None.
     """
+    # Labels and evidence are sorted to keep bundle diffs deterministic.
     labels = sorted(set(report.labels()))
     evidence_index = report.evidence_index()
     evidence = {label: sorted(set(items)) for label, items in evidence_index.items()}
@@ -235,6 +262,7 @@ def build_bundle(
     Raises:
         None.
     """
+    # Bundle content is normalized now so JSON output remains deterministic.
     bundle = {
         "id": exemplar_id,
         "created_utc": _utc_now(),
@@ -266,6 +294,7 @@ def _ensure_dirs() -> None:
     Raises:
         OSError: If directories cannot be created.
     """
+    # Idempotent directory creation keeps capture safe in concurrent runs.
     _CAPTURE_DIR.mkdir(parents=True, exist_ok=True)
     _RENDER_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -285,6 +314,7 @@ def write_bundle(bundle: Dict[str, Any]) -> Path:
     Raises:
         OSError: If writing fails.
     """
+    # Canonical JSON is used so diffs reflect semantic changes only.
     _ensure_dirs()
     output_path = _CAPTURE_DIR / f"{bundle['id']}.json"
     output_path.write_text(_canonical_json(bundle) + "\n")
@@ -306,6 +336,7 @@ def _humanize_label(label: str) -> str:
     Raises:
         None.
     """
+    # Humanized labels are used for narrative summaries, not enforcement logic.
     suffix = label.split(".")[-1].replace("_", " ").lower()
     return suffix
 
@@ -325,6 +356,7 @@ def _violation_sentence(label: str) -> str:
     Raises:
         None.
     """
+    # Templates keep narrative explanations consistent across exemplars.
     prefix = label.split(".")[0] if "." in label else label
     human = _humanize_label(label)
     templates = {
@@ -414,6 +446,7 @@ def render_markdown(bundle: Dict[str, Any]) -> str:
     Raises:
         None.
     """
+    # Rendering is template-driven to keep exemplars readable and consistent.
     source = bundle.get("source", {})
     labels = bundle.get("violations", {}).get("labels", [])
     notes = bundle.get("notes")
@@ -446,7 +479,7 @@ def render_markdown(bundle: Dict[str, Any]) -> str:
     header = (
         "<!--\n"
         f"Title: TRUST Spec Exemplar — {bundle.get('id')}\n"
-        "Version: 1.0\n"
+        "Version: 1.0.1\n"
         "Status: Generated\n"
         "SSE Profile: Markdown & Documentation v1.3\n"
         "Audience: Developers, implementers, auditors\n"
@@ -507,6 +540,7 @@ def write_rendered(bundle: Dict[str, Any]) -> Path:
     Raises:
         OSError: If writing fails.
     """
+    # Rendered output is generated alongside JSON for human review.
     _ensure_dirs()
     output_path = _RENDER_DIR / f"{bundle['id']}.md"
     output_path.write_text(render_markdown(bundle))
@@ -524,21 +558,25 @@ def update_index() -> None:
 
     Resources:
         Local filesystem under trust_spec/exemplars.
+        Environment variable TRUST_EXEMPLARS_REBUILD_INDEX.
 
     Raises:
         OSError: If writing fails.
     """
+    # Index updates are append-only by default to preserve audit history.
     _ensure_dirs()
     rendered = sorted(path.name for path in _RENDER_DIR.glob("*.md"))
     header = (
         "<!--\n"
         "Title: TRUST Spec Exemplars — Index\n"
-        "Version: 1.0\n"
+        "Version: 1.0.1\n"
         "Status: Generated\n"
         "SSE Profile: Markdown & Documentation v1.3\n"
         "Audience: Developers, implementers, auditors\n"
         "Scope: Index of invalid-state exemplar renderings\n"
         "Security / Safety: Links only; no secrets should be present\n"
+        "Generation: Produced by trust_spec/exemplars.py when TRUST_EXEMPLARS=1\n"
+        "Index Update: Append-only unless TRUST_EXEMPLARS_REBUILD_INDEX=1\n"
         "-->\n"
     )
     lines = [
@@ -546,13 +584,33 @@ def update_index() -> None:
         "# TRUST Spec Exemplars",
         "",
         "This index links generated exemplar renderings.",
+        "Entries are appended by default to preserve the audit trail.",
+        "Set TRUST_EXEMPLARS_REBUILD_INDEX=1 to rebuild the index.",
         "",
     ]
-    if rendered:
-        lines.extend([f"- `_rendered/{name}`" for name in rendered])
-    else:
-        lines.append("- (No exemplars captured yet.)")
-    _README_PATH.write_text("\n".join(lines).strip() + "\n")
+    if _index_rebuild_enabled() or not _README_PATH.exists():
+        if rendered:
+            lines.extend([f"- `_rendered/{name}`" for name in rendered])
+        else:
+            lines.append("- (No exemplars captured yet.)")
+        _README_PATH.write_text("\n".join(lines).strip() + "\n")
+        return
+
+    existing = _README_PATH.read_text().splitlines()
+    existing_entries = {
+        line for line in existing if line.startswith("- `_rendered/") and line.endswith("`")
+    }
+    new_entries = [
+        f"- `_rendered/{name}`"
+        for name in rendered
+        if f"- `_rendered/{name}`" not in existing_entries
+    ]
+    if not new_entries:
+        return
+    with _README_PATH.open("a", encoding="utf-8") as handle:
+        if existing and existing[-1] != "":
+            handle.write("\n")
+        handle.write("\n".join(new_entries) + "\n")
 
 
 def capture_on_failure(
@@ -592,6 +650,7 @@ def capture_on_failure(
     try:
         assertion()
     except AssertionError:
+        # Best-effort capture is isolated; failures here never mask the test failure.
         if exemplars_enabled():
             try:
                 bundle = build_bundle(

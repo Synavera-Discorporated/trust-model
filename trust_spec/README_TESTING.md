@@ -1,6 +1,6 @@
 <!--
 Title: TRUST Spec Tests — README
-Version: 1.0
+Version: 1.0.1
 Status: Stable
 SSE Profile: Markdown & Documentation v1.3
 Audience: Developers, implementers, auditors
@@ -12,7 +12,7 @@ License: CC BY-SA 4.0
 Copyright: © 2026 James I.T. Wylie
 Linked Artifacts:
   - Root Overview: README.md
-  - Whitepaper: trust_model_v1.0.md
+  - Whitepaper: trust_model_v1.0.1.md
   - Test Suite: trust_spec/ (SSE-Python v1.2)
 -->
 
@@ -36,6 +36,7 @@ It translates the normative statements in the TRUST whitepaper into **property-b
   * accountability and reporting
   * boundary governance
   * non-interference in shared environments
+* An **exemplar capture path** (opt-in) that freezes minimal failing cases as reviewable artifacts.
 * An **adversarial test environment**, covering:
 
   * stateful event sequences
@@ -54,6 +55,7 @@ It translates the normative statements in the TRUST whitepaper into **property-b
 * **Not a security proof** or a claim of real-world safety.
 * **Not an endorsement** of any particular technical stack, protocol, UI, or governance mechanism.
 * **Not a guarantee** that any given implementation is “trustworthy” in practice.
+* **Not an auto-capture system** unless explicitly enabled for exemplar harvesting.
 
 Passing these tests does **not** mean a system is ethical, compliant, or safe.
 It means it satisfies the **explicit structural constraints tested here**, and nothing more.
@@ -142,7 +144,7 @@ This suite defines three Hypothesis profiles:
 
 * `ci`: Fast, deterministic, and minimal. Use this on every commit.
 * `deep`: Broader adversarial search. Use for manual or scheduled runs.
-* `exemplar`: Adversarial search tuned for harvesting invalid-state exemplars.
+* `stress`: Adversarial search tuned for harvesting invalid-state exemplars.
   Slow by design; pairs well with `TRUST_EXEMPLARS=1`.
 
 Example usage from inside `trust_spec/`:
@@ -150,8 +152,18 @@ Example usage from inside `trust_spec/`:
 ```
 pytest -q . --hypothesis-profile=ci
 pytest -q . --hypothesis-profile=deep
-TRUST_EXEMPLARS=1 pytest -q . --hypothesis-profile=exemplar
+TRUST_EXEMPLARS=1 pytest -q . --hypothesis-profile=stress
 ```
+
+### Exemplar capture (opt-in)
+
+Exemplar capture is disabled by default. To enable it for explicitly marked tests:
+
+```
+TRUST_EXEMPLARS=1 pytest -q . --hypothesis-profile=stress
+```
+
+Captured JSON bundles are written under `trust_spec/exemplars/_captures/` and rendered Markdown is written to `trust_spec/exemplars/_rendered/`.
 
 ### Reproduce failures with a seed
 

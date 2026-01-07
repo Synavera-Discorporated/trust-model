@@ -16,14 +16,15 @@
    dataclasses, hashlib, json, trust_spec.violations.
  Operational Scope:
    Used by tests and stubs to model expected behavior.
-    Revision History:
-      2026-01-06 COD  Added SSE header and audit-log metadata.
-      2026-01-06 COD  Added invariants and trust boundary notes.
-      2026-01-06 COD  Default base time set for deterministic receipts.
+ Revision History:
+   2026-01-06 COD  Added SSE header and audit-log metadata.
+   2026-01-06 COD  Added invariants and trust boundary notes.
+   2026-01-06 COD  Default base time set for deterministic receipts.
    2026-01-06 COD  Added pressure-point checks for telemetry and drift authority.
    2026-01-06 COD  Preserve decision-time zero to catch posthoc authority gaps.
    2026-01-06 COD  Guard against posthoc authority in decision receipts.
    2026-01-06 COD  Added evaluator safety net for malformed inputs.
+   2026-01-06 COD  Added narrative comments for evaluation and receipt logic.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)
@@ -84,6 +85,7 @@ _KNOWN_EVENT_TYPES = {
     "reductionist_metric",
 }
 
+# Deterministic base time makes receipts stable across runs for audit replay.
 _DEFAULT_BASE_TIME_UTC = "2026-01-01T00:00:00Z"
 
 
@@ -302,15 +304,18 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
     Raises:
         None. Unknown event types are recorded as error receipts.
     """
+    # Clone before mutation so callers can treat State as immutable snapshots.
     new_state = _clone_state(state)
     event_time = new_state.clock
     event = dict(event)
     receipts: List[Dict[str, Any]] = []
     event_type = event.get("type")
+    # Always strip upstream hashes so we can rebuild a clean chain locally.
     event.pop("event_hash", None)
     event.pop("event_hash_prev", None)
     event.pop("time_utc", None)
 
+    # Unknown event types are logged as errors rather than raising.
     if event_type is None or event_type not in _KNOWN_EVENT_TYPES:
         original_type = event_type
         event["type"] = "error"
@@ -364,6 +369,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
         new_state.receipt_log.extend(receipts)
         return new_state, receipts
 
+    # Normal events enter the audit log with hash chaining for traceability.
     event_time_utc = _event_time_utc(new_state.base_time_utc, event_time)
     event["time"] = event_time
     event["time_utc"] = event_time_utc
@@ -391,6 +397,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
         Raises:
             None.
         """
+        # Receipts are chained to preserve order and support audit verification.
         data["receipt_id"] = new_state.next_receipt_id
         data["time"] = event_time
         data["time_utc"] = event_time_utc
@@ -404,6 +411,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
         new_state.next_receipt_id += 1
         receipts.append(data)
 
+    # Authority establishment and delegation lifecycle.
     if event_type == "delegation":
         delegation_id = event["delegation_id"]
         scope = event.get("scope") or {}
@@ -455,6 +463,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "effective_at": effective_at,
         }
         _add_receipt(receipt)
+    # Consent lifecycle (issued and withdrawn).
     elif event_type == "consent":
         consent_id = event["consent_id"]
         new_state.consents[consent_id] = event
@@ -484,6 +493,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "withdrawn": True,
         }
         _add_receipt(receipt)
+    # Telemetry records feed later influence checks.
     elif event_type == "telemetry":
         telemetry_id = event["telemetry_id"]
         new_state.telemetry[telemetry_id] = event
@@ -503,6 +513,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "exposure_count": new_state.telemetry_exposure.get(telemetry_id, 1),
         }
         _add_receipt(receipt)
+    # Service actions generate decision receipts with authority chains.
     elif event_type == "service_action":
         decision_id = event["decision_id"]
         new_state.decisions.append(event)
@@ -542,6 +553,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "explanation_contextual": event.get("explanation_contextual"),
         }
         _add_receipt(receipt)
+    # Shared-environment actions are tracked separately for RESPECT.
     elif event_type == "shared_action":
         new_state.shared_actions.append(event)
         receipt = {
@@ -552,6 +564,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "consent_basis": event.get("consent_basis"),
         }
         _add_receipt(receipt)
+    # Logical time moves only via explicit time_advance events.
     elif event_type == "time_advance":
         ticks = int(event.get("ticks") or 0)
         new_state.clock += ticks
@@ -562,6 +575,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "to_time": new_state.clock,
         }
         _add_receipt(receipt)
+    # Boundary governance events model shared-environment controls.
     elif event_type == "boundary_declaration":
         environment_id = event["environment_id"]
         new_state.boundaries[environment_id] = event
@@ -672,6 +686,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "enforcement_contestable": event.get("enforcement_contestable"),
         }
         _add_receipt(receipt)
+    # Audits record minimum compliance checkpoints.
     elif event_type == "trust_audit":
         new_state.audits["trust"] = event
         receipt = {
@@ -688,6 +703,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "minimum_met": event.get("minimum_met"),
         }
         _add_receipt(receipt)
+    # Enforcement actions must remain attributable and contestable.
     elif event_type == "enforcement":
         new_state.enforcement.append(event)
         receipt = {
@@ -703,6 +719,7 @@ def apply_event(state: State, event: Dict[str, Any]) -> Tuple[State, List[Dict[s
             "contest_path": event.get("contest_path"),
         }
         _add_receipt(receipt)
+    # Disclosures surface system limits and user actionability.
     elif event_type == "disclosure":
         new_state.disclosures.append(event)
         receipt = {
@@ -741,6 +758,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
     """
     report = Report(kind="trust")
 
+    # Collect evidence first so we can emit all applicable violations together.
     invalid_state = False
     justification_evidence: List[str] = []
     missing_reporting_evidence: List[str] = []
@@ -795,6 +813,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
         Raises:
             None.
         """
+        # Justifications preserve operator intent when a state is invalid.
         justification = event.get("justification")
         if justification:
             justification_evidence.append(
@@ -802,6 +821,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
             )
 
     for event in state.event_log:
+        # Reductionism scores are tracked as violations rather than ignored.
         if event.get("type") == "reductionist_metric":
             report.score = event.get("score")
         if event.get("type") == "delegation" and event.get("revocable") is False:
@@ -823,6 +843,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
     for receipt in state.receipt_log:
         receipt_id = receipt.get("receipt_id")
         evidence = f"receipt:{receipt_id}" if receipt_id is not None else "receipt:unknown"
+        # Receipts drive accountability checks even if events are missing.
         if receipt.get("type") == "decision_receipt" and receipt.get("report_to_suser") is False:
             missing_reporting_evidence.append(evidence)
         if receipt.get("type") == "decision_receipt":
@@ -935,6 +956,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
     for decision in state.decisions:
         evidence = [_event_id(decision)]
         suser_id = decision.get("suser_id")
+        # Decisions must anchor authority to an identifiable S-User.
         if not suser_id:
             report.add_violation(TRUST_VIOLATION.SUSER_UNIDENTIFIED.value, evidence)
             invalid_state = True
@@ -947,6 +969,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
         decision_time = (
             int(decision_time_value) if decision_time_value is not None else state.clock
         )
+        # Decision-time authority cannot be retroactively established.
         if (
             not delegation
             or delegation.get("suser_id") != suser_id
@@ -984,6 +1007,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
         if not decision.get("authority_chain_complete"):
             report.add_violation(TRUST_VIOLATION.ACCOUNTABILITY_BREAK.value, evidence)
         telemetry_refs = decision.get("telemetry_refs", [])
+        # Aggregate influence must be attributable to named sources.
         if len(telemetry_refs) > 1 and not decision.get("telemetry_attribution_complete", True):
             report.add_violation(TELEMETRY_VIOLATION.OPAQUE_INFLUENCE.value, evidence)
         if decision.get("telemetry_aggregate"):
@@ -999,6 +1023,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
                 state.telemetry.get(telemetry_id, {}).get("self_originating")
                 for telemetry_id in telemetry_refs
             )
+            # Self-originating telemetry requires explicit containment.
             if uses_self_originating and not decision.get("self_telemetry_contained"):
                 report.add_violation(TELEMETRY_VIOLATION.OPAQUE_INFLUENCE.value, evidence)
         chain_override = decision.get("authority_chain_override")
@@ -1024,6 +1049,7 @@ def _evaluate_trust_unsafe(state: State) -> Report:
             report.add_violation(CONSENT_VIOLATION.INVALID_CONSENT.value, evidence)
 
     if invalid_state:
+        # Invalid states are always surfaced even when specific violations exist.
         report.add_violation(STRUCTURAL_VIOLATION.INVALID_STATE.value, ["structural"])
         if justification_evidence:
             report.add_violation(
@@ -1124,6 +1150,7 @@ def evaluate_trust(state: State) -> Report:
     try:
         return _evaluate_trust_unsafe(state)
     except Exception as exc:
+        # Evaluator must be total: classify malformed inputs rather than crash.
         report = Report(kind="trust")
         report.add_violation(STRUCTURAL_VIOLATION.INVALID_STATE.value, ["evaluator"])
         report.add_violation(TRUST_VIOLATION.ACCOUNTABILITY_BREAK.value, ["evaluator"])
@@ -1154,6 +1181,7 @@ def _receipt_visible_to_suser(receipt: Dict[str, Any], suser_id: str) -> bool:
     Raises:
         None.
     """
+    # Visibility rules preserve accountability while respecting redaction.
     receipt_type = receipt.get("type")
     if receipt_type == "decision_receipt":
         delivered = receipt.get("delivered_to_suser")
@@ -1183,6 +1211,7 @@ def _redact_receipt(receipt: Dict[str, Any]) -> Dict[str, Any]:
     Raises:
         None.
     """
+    # Redaction enforces declared visibility limits without dropping the receipt itself.
     view = dict(receipt)
     redacted = set(view.get("redacted_fields") or [])
     if view.get("explanation_delivered") is False:
@@ -1210,6 +1239,7 @@ def suser_view(state: State, suser_id: str) -> Dict[str, Any]:
     Raises:
         None.
     """
+    # The view is receipt-only; decisions are interpreted through audit artifacts.
     receipts: List[Dict[str, Any]] = []
     for receipt in state.receipt_log:
         if _receipt_visible_to_suser(receipt, suser_id):
@@ -1235,6 +1265,7 @@ def evaluate_trust_view(state: State, suser_id: str) -> Report:
     """
     report = Report(kind="trust_view")
     view = suser_view(state, suser_id)
+    # Decision receipts are grouped by decision_id to validate per-decision accountability.
     view_receipts = [
         receipt
         for receipt in view["receipts"]
@@ -1312,6 +1343,7 @@ def _evaluate_respect_unsafe(state: State) -> Report:
     revocation_delay_disclosed_at: Optional[int] = None
 
     for event in state.event_log:
+        # Track earliest disclosure so later delays can be judged fairly.
         if (
             event.get("type") == "revocation_policy"
             and event.get("revocation_delay")
@@ -1331,6 +1363,7 @@ def _evaluate_respect_unsafe(state: State) -> Report:
 
     for action in state.shared_actions:
         evidence = [_event_id(action)]
+        # Shared actions are evaluated for consent, scope, and boundary integrity.
         affected = action.get("affected_susers", [])
         actor = action.get("actor_suser_id")
         affects_others = any(suser != actor for suser in affected)
@@ -1354,6 +1387,7 @@ def _evaluate_respect_unsafe(state: State) -> Report:
             report.add_violation(RESPECT_VIOLATION.DIAGNOSTIC_GAP.value, evidence)
 
     for entry in state.entry_conditions.values():
+        # Entry conditions must exist before access is granted.
         if not entry.get("conditions_defined"):
             report.add_violation(
                 GOVERNANCE_VIOLATION.MISSING_ENTRY_CONDITIONS.value, [_event_id(entry)]
@@ -1446,6 +1480,7 @@ def _evaluate_respect_unsafe(state: State) -> Report:
     for default in state.defaults:
         evidence = [_event_id(default)]
         expires_at = default.get("expires_at")
+        # Defaults must remain reversible and non-coercive over time.
         if (
             default.get("exploits_bias")
             or default.get("expands_scope")
@@ -1505,6 +1540,7 @@ def evaluate_respect(state: State) -> Report:
     try:
         return _evaluate_respect_unsafe(state)
     except Exception as exc:
+        # Evaluator must be total: classify malformed inputs rather than crash.
         report = Report(kind="respect")
         report.add_violation(STRUCTURAL_VIOLATION.INVALID_STATE.value, ["evaluator"])
         report.add_violation(TRUST_VIOLATION.ACCOUNTABILITY_BREAK.value, ["evaluator"])
@@ -1535,6 +1571,7 @@ def query_decision(state: State, decision_id: str) -> Dict[str, Any]:
     Raises:
         None. Missing decisions return a minimal non-legible response.
     """
+    # The query surface is intentionally minimal: it mirrors what an audit view should expose.
     decision = None
     for item in reversed(state.decisions):
         if item.get("decision_id") == decision_id:

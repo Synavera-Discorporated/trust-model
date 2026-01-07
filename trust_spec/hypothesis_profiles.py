@@ -17,7 +17,8 @@
  Operational Scope:
    Imported by pytest to register profiles before tests run.
  Revision History:
-   2026-01-06 COD  Created shared profile registry with exemplar profile.
+   2026-01-06 COD  Created shared profile registry with stress profile.
+   2026-01-06 COD  Renamed exemplar profile to stress for clarity.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)
@@ -48,8 +49,8 @@ PROFILES = {
         derandomize=False,
         database=None,
     ),
-    # Exemplar harvesting: prioritize discovery and shrinking over speed.
-    "exemplar": dict(
+    # Stress profile: prioritize discovery and shrinking over speed.
+    "stress": dict(
         max_examples=2000,
         deadline=None,
         suppress_health_check=[

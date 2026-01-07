@@ -779,14 +779,40 @@ This section outlines practical pathways for adopting TRUST and RESPECT across d
 [^7]: KPMG. “The American Trust in AI Paradox: Adoption Outpaces Governance.” KPMG Press Release, Apr 29, 2025. (Finds that while AI use is surging, 75% of workers remain wary of risks; only 41% are willing to trust AI, and most want stronger oversight from both industry and government) [kpmg.com](https://kpmg.com/us/en/media/news/trust-in-ai-2025.html)
 [^8]: All Tech Is Human. “The Missing Foundation in AI Governance: Building Trust Across Parties.” All Tech Is Human Blog, 2025. (Emphasizes that trustworthiness demands transparency and structured accountability, and warns that without these, public mistrust in technology will deepen) [alltechishuman.org](https://alltechishuman.org/all-tech-is-human-blog/10-pressing-concerns-for-ai-governance-professionals)
 
-## Changelog (v1.0 editorial)
+## Editorial Changelog (v1.0)
 
-This changelog records editorial and formatting changes only; no semantic or normative changes are introduced.
+This changelog records editorial and formatting changes only.
+No semantic, normative, or interpretive changes are introduced.
 - Added a GitHub-friendly title block and Table of Contents.
 - Normalised section and subsection heading levels and spacing.
 - Converted inline and non-standard bullets into consistent Markdown lists.
 - Applied blockquotes to key TRUST/RESPECT model statements.
 - Moved and reformatted the References section to the end.
+
+## Normative Version Changelog
+
+### v1.0.1 — Clarifications (2026-01-07)
+
+Classification: Clarification release (no scope expansion)
+
+This release clarifies requirements that were implicit in v1.0 and
+surfaced through adversarial testing and evaluator hardening.
+No new authorities, actors, or mechanisms are introduced.
+
+Clarifications:
+- Authority must exist at the time an action is taken; post-hoc delegation
+  does not retroactively legitimize actions.
+- Authority traceability requires a linear, non-branching chain that
+  terminates in an identifiable S-User.
+- When multiple telemetry signals influence a decision, attribution must
+  preserve source visibility; aggregate influence must not obscure origin.
+- Evaluation encountering malformed or indeterminable inputs must classify
+  the system as non-compliant rather than fail silently or terminate.
+
+Non-changes:
+- No extension of service or telemetry authority.
+- No changes to RESPECT semantics.
+- No implementation details, algorithms, or enforcement mechanisms prescribed.
 
 ## Licence
 

@@ -61,7 +61,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         action="store",
         default=None,
         help=(
-            "Alias for Hypothesis profile: ci, deep, or exemplar "
+            "Alias for Hypothesis profile: ci, deep, or stress "
             "(use --hypothesis-profile if preferred)"
         ),
     )
