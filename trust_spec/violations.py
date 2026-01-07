@@ -17,9 +17,7 @@
  Operational Scope:
    Shared by the reference model and tests for evaluation output.
  Revision History:
-   2026-01-06 COD  Added SSE header for auditability.
-   2026-01-06 COD  Added narrative comments for violation taxonomy and helpers.
-   2026-01-06 COD  Added invariants and trust boundary notes.
+   2026-01-06 COD  Added SSE header for auditability; Added narrative comments for violation taxonomy and helpers; Added invariants and trust boundary notes.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)

@@ -17,8 +17,7 @@
  Operational Scope:
    Imported by pytest to register profiles before tests run.
  Revision History:
-   2026-01-06 COD  Created shared profile registry with stress profile.
-   2026-01-06 COD  Renamed exemplar profile to stress for clarity.
+   2026-01-06 COD  Created shared profile registry with stress profile; Renamed exemplar profile to stress for clarity.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)

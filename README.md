@@ -1,6 +1,6 @@
 <!--
 Title: The TRUST Model — Repository Overview
-Version: 1.0.1
+Version: 1.0.2
 Status: Stable
 SSE Profile: Markdown & Documentation v1.3
 Audience: Policymakers, architects, auditors, researchers, developers
@@ -11,7 +11,7 @@ Security / Safety: Describes governance models; contains no operational commands
 License: CC BY-SA 4.0
 Copyright: © 2026 James I.T. Wylie
 Linked Artifacts:
-  - Whitepaper: trust_model_v1.0.1.md
+  - Whitepaper: trust_model_v1.0.2.md
   - Test Harness: trust_spec/README_TESTING.md (Markdown SSE v1.3)
   - Test Code: trust_spec/ (SSE-Python v1.2)
 -->
@@ -21,7 +21,7 @@ Linked Artifacts:
 
 Modern digital systems exercise real power over users, organisations, and societies, yet it is often unclear **who authorised that power**, **who is accountable for its outcomes**, or **how those affected can contest decisions**. Legal compliance and technical performance alone have proven insufficient to resolve this gap.
 
-This repository contains the canonical v1.0.1 release of the **TRUST model**, a structural framework for restoring accountability in digital systems, alongside **RESPECT**, its companion model for governing interaction and influence in shared environments.
+This repository contains the canonical v1.0.2 release of the **TRUST model**, a structural framework for restoring accountability in digital systems, alongside **RESPECT**, its companion model for governing interaction and influence in shared environments.
 
 - **TRUST** establishes *directional accountability*: authority must terminate with the user, and systems must be able to report, explain, and justify their actions back to that authority.
 - **RESPECT** constrains how systems may affect others, enforcing restrictions on scope, power, and externalised control where multiple users or systems coexist.
@@ -34,15 +34,15 @@ This work is **not a technology, product, or compliance checklist**. It is a gov
 
 ### Status
 
-- **Version:** v1.0.1  
+- **Version:** v1.0.2  
 - **Status:** Canonical release  
 - **Licence:** CC BY-SA 4.0
 
 
 ## Contents
 
-- `trust_model_v1.0.1.md`  
-  The canonical whitepaper defining the TRUST and RESPECT models (v1.0.1 clarifications).
+- `trust_model_v1.0.2.md`  
+  The canonical whitepaper defining the TRUST and RESPECT models (v1.0.2 release).
 
 - `trust_spec/`  
   Reference model, tests, and exemplar tooling for the TRUST/RESPECT properties.

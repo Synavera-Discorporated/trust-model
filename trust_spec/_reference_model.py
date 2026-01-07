@@ -17,14 +17,7 @@
  Operational Scope:
    Used by tests and stubs to model expected behavior.
  Revision History:
-   2026-01-06 COD  Added SSE header and audit-log metadata.
-   2026-01-06 COD  Added invariants and trust boundary notes.
-   2026-01-06 COD  Default base time set for deterministic receipts.
-   2026-01-06 COD  Added pressure-point checks for telemetry and drift authority.
-   2026-01-06 COD  Preserve decision-time zero to catch posthoc authority gaps.
-   2026-01-06 COD  Guard against posthoc authority in decision receipts.
-   2026-01-06 COD  Added evaluator safety net for malformed inputs.
-   2026-01-06 COD  Added narrative comments for evaluation and receipt logic.
+   2026-01-06 COD  Added SSE header and audit-log metadata; Added invariants and trust boundary notes; Default base time set for deterministic receipts; Added pressure-point checks for telemetry and drift authority; Preserve decision-time zero to catch posthoc authority gaps; Guard against posthoc authority in decision receipts; Added evaluator safety net for malformed inputs; Added narrative comments for evaluation and receipt logic.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)

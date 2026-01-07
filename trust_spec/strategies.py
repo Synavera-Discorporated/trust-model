@@ -17,11 +17,7 @@
  Operational Scope:
    Used by property-based tests to create input data.
  Revision History:
-   2026-01-06 COD  Added SSE header for auditability.
-   2026-01-06 COD  Added invariants and trust boundary notes.
-   2026-01-06 COD  Replaced lambdas with named helpers for clarity.
-   2026-01-06 COD  Added narrative comments for section intent.
-   2026-01-06 COD  Added fields for pressure-point telemetry and drift tests.
+   2026-01-06 COD  Added SSE header for auditability; Added invariants and trust boundary notes; Replaced lambdas with named helpers for clarity; Added narrative comments for section intent; Added fields for pressure-point telemetry and drift tests.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)

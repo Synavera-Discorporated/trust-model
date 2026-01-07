@@ -17,10 +17,7 @@
  Operational Scope:
    Imported by tests as trust_impl to access SUT functions and state types.
  Revision History:
-   2026-01-06 COD  Added SSE header and compatibility wrapper.
-   2026-01-06 COD  Added invariants and trust boundary notes.
-   2026-01-06 COD  Clarified trust boundary delegation target.
-   2026-01-06 COD  Added narrative comment for re-export intent.
+   2026-01-06 COD  Added SSE header and compatibility wrapper; Added invariants and trust boundary notes; Clarified trust boundary delegation target; Added narrative comment for re-export intent.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)

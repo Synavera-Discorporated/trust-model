@@ -1,6 +1,6 @@
 <!--
 Title: TRUST Spec Exemplars — Index
-Version: 1.0.1
+Version: 1.0.2
 Status: Generated
 SSE Profile: Markdown & Documentation v1.3
 Audience: Developers, implementers, auditors

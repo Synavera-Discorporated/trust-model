@@ -1,6 +1,6 @@
 <!--
 Title: TRUST Spec Tests — README
-Version: 1.0.1
+Version: 1.0.2
 Status: Stable
 SSE Profile: Markdown & Documentation v1.3
 Audience: Developers, implementers, auditors
@@ -12,7 +12,7 @@ License: CC BY-SA 4.0
 Copyright: © 2026 James I.T. Wylie
 Linked Artifacts:
   - Root Overview: README.md
-  - Whitepaper: trust_model_v1.0.1.md
+  - Whitepaper: trust_model_v1.0.2.md
   - Test Suite: trust_spec/ (SSE-Python v1.2)
 -->
 

@@ -17,8 +17,7 @@
  Operational Scope:
    Used by selected tests to freeze failing sequences as reviewable artifacts.
 Revision History:
-   2026-01-06 COD  Created exemplar capture and rendering helpers.
-   2026-01-06 COD  Switched exemplar index updates to append-only with rebuild flag.
+   2026-01-06 COD  Created exemplar capture and rendering helpers; Switched exemplar index updates to append-only with rebuild flag.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)
@@ -479,7 +478,7 @@ def render_markdown(bundle: Dict[str, Any]) -> str:
     header = (
         "<!--\n"
         f"Title: TRUST Spec Exemplar — {bundle.get('id')}\n"
-        "Version: 1.0.1\n"
+        "Version: 1.0.2\n"
         "Status: Generated\n"
         "SSE Profile: Markdown & Documentation v1.3\n"
         "Audience: Developers, implementers, auditors\n"
@@ -569,7 +568,7 @@ def update_index() -> None:
     header = (
         "<!--\n"
         "Title: TRUST Spec Exemplars — Index\n"
-        "Version: 1.0.1\n"
+        "Version: 1.0.2\n"
         "Status: Generated\n"
         "SSE Profile: Markdown & Documentation v1.3\n"
         "Audience: Developers, implementers, auditors\n"

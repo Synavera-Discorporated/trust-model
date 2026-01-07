@@ -17,10 +17,7 @@
  Operational Scope:
    Loaded by pytest to register profiles and CLI options.
  Revision History:
-   2026-01-06 COD  Added SSE header for auditability.
-   2026-01-06 COD  Added narrative comments for profile and path setup.
-   2026-01-06 COD  Added invariants and trust boundary notes.
-   2026-01-06 COD  Delegated profile registration to hypothesis_profiles.
+   2026-01-06 COD  Added SSE header for auditability; Added narrative comments for profile and path setup; Added invariants and trust boundary notes; Delegated profile registration to hypothesis_profiles.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)

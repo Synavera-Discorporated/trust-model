@@ -17,10 +17,7 @@
  Operational Scope:
    Executed under pytest as part of the trust-spec suite.
  Revision History:
-   2026-01-06 COD  Added SSE header for auditability.
-   2026-01-06 COD  Added invariants and trust boundary notes.
-   2026-01-06 COD  Added narrative spec comments for readability.
-   2026-01-06 COD  Added evaluator safety meta-invariant tests.
+   2026-01-06 COD  Added SSE header for auditability; Added invariants and trust boundary notes; Added narrative spec comments for readability; Added evaluator safety meta-invariant tests.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)

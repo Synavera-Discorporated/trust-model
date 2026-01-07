@@ -17,10 +17,7 @@
  Operational Scope:
    Executed under pytest as part of the trust-spec suite.
  Revision History:
-   2026-01-06 COD  Added SSE header for auditability.
-   2026-01-06 COD  Added invariants and trust boundary notes.
-   2026-01-06 COD  Added narrative comments for state machine intent.
-   2026-01-06 COD  Added spec/why tags for state machine rules.
+   2026-01-06 COD  Added SSE header for auditability; Added invariants and trust boundary notes; Added narrative comments for state machine intent; Added spec/why tags for state machine rules.
 ------------------------------------------------------------
  SSE Principles Observed:
    - Explicit Result-based API (no silent failures)
