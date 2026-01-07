@@ -814,6 +814,10 @@ Non-changes:
 - No changes to RESPECT semantics.
 - No implementation details, algorithms, or enforcement mechanisms prescribed.
 
+Notes:
+- Relevant SSE profiles are included to govern evaluation and testing discipline; no TRUST or RESPECT semantics are altered by their inclusion.
+
+
 ## Licence
 
 This work is licensed under the Creative Commons
