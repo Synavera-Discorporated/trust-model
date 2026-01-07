@@ -1,0 +1,25 @@
+#Generated exemplar artefacts are ignored by design.
+#They are non-authoritative outputs of Hypothesis discovery and must not be treated as part of the TRUST model or spec.
+
+# Python junk
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.dist/
+.build/
+
+# Virtualenv
+.venv/
+venv/
+
+# Hypothesis
+.hypothesis/
+
+# Exemplar captures (generated)
+trust_spec/exemplars/_captures/
+trust_spec/exemplars/_rendered/
+
+# OS/editor
+.DS_Store
+.vscode/

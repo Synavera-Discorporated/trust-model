@@ -1,6 +1,6 @@
 <!--
 Title: The TRUST Model — Restoring Accountability in the Digital Age
-Version: v1.0
+Version: v1.0.1
 Status: Canonical Release
 SSE Profile: Markdown & Documentation v1.3
 Audience: Policymakers, regulators, auditors, platform operators, technologists, researchers, and governance-focused readers
@@ -11,6 +11,8 @@ Security / Safety: Normative governance guidance; may influence operational, org
 Licence: CC BY-SA 4.0
 Copyright: © 2026 James I.T. Wylie
 Linked Artifacts: [TRUST and RESPECT models](https://github.com/Synavera-Discorporated/trust-model)
+Revision History:
+  - 2026-01-06 COD  Clarified authority timing, chain resolution, telemetry attribution, evaluator totality, and self-originating telemetry containment.
 -->
 
 # The TRUST Model — Restoring Accountability in the Digital Age
@@ -133,7 +135,7 @@ Crucially, administrative control does not imply sovereignty. Administrators, op
 **Capability** refers to what a system or component is technically able to do.
 **Authority** refers to what a system or component is legitimately permitted to do.
 Modern systems frequently conflate these two concepts, treating technical capability as implicit permission. This paper explicitly rejects that equivalence. A system possessing a capability does not imply that it has the authority to exercise it.
-Authority must always be derived from, and traceable back to, the S-User. Where capability exists without clearly defined authority, the system is structurally unsound, regardless of intent or outcome.
+Authority must always be derived from, and traceable back to, the S-User. Authority must exist at the time an action is taken; post-hoc delegation shall not legitimise prior actions. Where capability exists without clearly defined authority, the system is structurally unsound, regardless of intent or outcome.
 
 ### 2.3 Delegation <a id="sec-2-3"></a>
 
@@ -165,7 +167,7 @@ Telemetry must not, by itself:
 - trigger irreversible outcomes,
 - or accumulate decision-making authority.
 
-If telemetry influences system behaviour, that influence becomes part of the system’s accountable surface and must be visible and explainable to the S-User.
+If telemetry influences system behaviour, that influence becomes part of the system’s accountable surface and must be visible and explainable to the S-User. When multiple telemetry signals influence a decision, attribution to source signals must remain explicit; aggregate summaries shall not obscure origin. Telemetry derived from a system’s own outputs shall not be used to justify authority unless governed by explicit, legible containment rules.
 Telemetry-driven decisions that cannot be explained in human terms are considered structurally invalid under this model, regardless of performance or efficiency gains.
 
 ### 2.5 Services <a id="sec-2-5"></a>
@@ -290,6 +292,7 @@ A TRUST-aligned system can answer, at any point:
 - who can inspect it,
 - and who can revoke or alter it.
 
+These answers must resolve through a traceable authority chain that terminates in an identifiable S-User; chains that cannot resolve are structurally invalid.
 When a system cannot answer these questions in terms accessible to the S-User, accountability has failed by definition.
 This diagnostic property allows TRUST to be applied across domains: consumer devices, enterprise platforms, public infrastructure, and emerging autonomous systems. It enables auditors, regulators, designers, and users to evaluate not just what a system does, but whether it is structurally allowed to do it.
 
@@ -569,7 +572,7 @@ A system is evaluated by examining:
 - how decisions are made and reported,
 - and how boundaries are defined and enforced.
 
-If these properties cannot be determined, the system is not merely opaque; it is non-compliant by definition.
+If these properties cannot be determined, the system is not merely opaque; it is non-compliant by definition. Evaluation must classify malformed or indeterminable inputs as non-compliant rather than fail silently or terminate.
 
 ### 7.2 Auditing TRUST <a id="sec-7-2"></a>
 

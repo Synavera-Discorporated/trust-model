@@ -1,3 +1,21 @@
+<!--
+Title: The TRUST Model — Repository Overview
+Version: 1.0
+Status: Stable
+SSE Profile: Markdown & Documentation v1.3
+Audience: Policymakers, architects, auditors, researchers, developers
+Addressability: Formal
+Scope: Executive summary and repository orientation for the TRUST/RESPECT models; not an implementation guide.
+Last Reviewed: 2026-01-06 (UTC)
+Security / Safety: Describes governance models; contains no operational commands or system-modifying steps.
+License: CC BY-SA 4.0
+Copyright: © 2026 James I.T. Wylie
+Linked Artifacts:
+  - Whitepaper: trust_model_v1.0.md
+  - Test Harness: trust_spec/README_TESTING.md (Markdown SSE v1.3)
+  - Test Code: trust_spec/ (SSE-Python v1.2)
+-->
+
 # The TRUST Model
 ## Restoring Accountability in the Digital Age
 
@@ -54,4 +72,9 @@ Attribution–ShareAlike 4.0 International Licence (CC BY-SA 4.0).
 
 See the `LICENSE` file for full legal text.
 
-© 2026 James I.T. Wylie
+---
+
+© 2026 James I.T. Wylie.  
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+
+TRUST™ and RESPECT™ are trademarks of Synavera Discorporated. Use of these marks does not imply endorsement unless explicitly stated and may be challenged when used to describe systems that materially violate the model definitions.
