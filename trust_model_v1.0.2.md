@@ -780,17 +780,6 @@ This section outlines practical pathways for adopting TRUST and RESPECT across d
 7. <a id="ref-kpmg-2025-trust-ai"></a> KPMG. “The American Trust in AI Paradox: Adoption Outpaces Governance.” KPMG Press Release, Apr 29, 2025. (Finds that while AI use is surging, 75% of workers remain wary of risks; only 41% are willing to trust AI, and most want stronger oversight from both industry and government) [kpmg.com](https://kpmg.com/us/en/media/news/trust-in-ai-2025.html)
 8. <a id="ref-alltechishuman-2025-foundation"></a> All Tech Is Human. “The Missing Foundation in AI Governance: Building Trust Across Parties.” All Tech Is Human Blog, 2025. (Emphasizes that trustworthiness demands transparency and structured accountability, and warns that without these, public mistrust in technology will deepen) [alltechishuman.org](https://alltechishuman.org/all-tech-is-human-blog/10-pressing-concerns-for-ai-governance-professionals)
 
-## Footnotes
-
-[^wef-2023]: See [Reference 1](#ref-wef-2023).
-[^amnesty-2025]: See [Reference 2](#ref-amnesty-2025).
-[^helpnet-2021-location]: See [Reference 3](#ref-helpnet-2021-location).
-[^wired-2022-gdpr]: See [Reference 4](#ref-wired-2022-gdpr).
-[^dotmag-2025-autonomy]: See [Reference 5](#ref-dotmag-2025-autonomy).
-[^business-reporter-2024-erosion]: See [Reference 6](#ref-business-reporter-2024-erosion).
-[^kpmg-2025-trust-ai]: See [Reference 7](#ref-kpmg-2025-trust-ai).
-[^alltechishuman-2025-foundation]: See [Reference 8](#ref-alltechishuman-2025-foundation).
-
 ## Editorial Changelog (v1.0)
 
 This changelog records editorial and formatting changes only.
@@ -855,4 +844,13 @@ Licensed under CC BY-SA 4.0.
 
 TRUST™ and RESPECT™ are trademarks of Synavera Discorporated. Use of these marks does not imply endorsement unless explicitly stated and may be challenged when used to describe systems that materially violate the model definitions.
 
-### Footnotes
+## Footnotes
+
+[^wef-2023]: See [Reference 1](#ref-wef-2023).
+[^amnesty-2025]: See [Reference 2](#ref-amnesty-2025).
+[^helpnet-2021-location]: See [Reference 3](#ref-helpnet-2021-location).
+[^wired-2022-gdpr]: See [Reference 4](#ref-wired-2022-gdpr).
+[^dotmag-2025-autonomy]: See [Reference 5](#ref-dotmag-2025-autonomy).
+[^business-reporter-2024-erosion]: See [Reference 6](#ref-business-reporter-2024-erosion).
+[^kpmg-2025-trust-ai]: See [Reference 7](#ref-kpmg-2025-trust-ai).
+[^alltechishuman-2025-foundation]: See [Reference 8](#ref-alltechishuman-2025-foundation).
